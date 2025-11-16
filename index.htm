@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Book Form</title>
+  <style>
+    body {
+      font-family: "Segoe UI", Arial, sans-serif;
+      background: linear-gradient(135deg, #f0f4f8, #d9e4f5);
+      margin: 0;
+      padding: 40px;
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+      min-height: 100vh;
+    }
+
+    form {
+      background: #fff;
+      max-width: 450px;
+      width: 100%;
+      padding: 25px;
+      border-radius: 12px;
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+      transition: transform 0.2s ease;
+    }
+
+    form:hover {
+      transform: translateY(-3px);
+    }
+
+    h2 {
+      text-align: center;
+      margin-bottom: 20px;
+      color: #333;
+    }
+
+    label {
+      display: block;
+      margin-top: 15px;
+      font-weight: 600;
+      color: #444;
+    }
+
+    input,
+    textarea,
+    select {
+      width: 100%;
+      padding: 10px;
+      margin-top: 6px;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      font-size: 14px;
+      transition: border-color 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    input:focus,
+    textarea:focus,
+    select:focus {
+      border-color: #4CAF50;
+      box-shadow: 0 0 6px rgba(76, 175, 80, 0.4);
+      outline: none;
+    }
+
+    button {
+      margin-top: 20px;
+      padding: 12px;
+      width: 100%;
+      background: linear-gradient(45deg, #4CAF50, #2E7D32);
+      color: white;
+      border: none;
+      border-radius: 8px;
+      font-size: 16px;
+      font-weight: bold;
+      cursor: pointer;
+      transition: background 0.3s ease, transform 0.2s ease;
+    }
+
+    button:hover {
+      background: linear-gradient(45deg, #66BB6A, #388E3C);
+      transform: scale(1.03);
+    }
+
+    #dv {
+      margin-top: 25px;
+      padding: 20px;
+      background: #fff;
+      border-radius: 10px;
+      box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1);
+      font-size: 15px;
+      line-height: 1.6;
+    }
+  </style>
+</head>
+
+<body>
+  <form id="bookForm">
+    <h2>📚 Book Form</h2>
+
+    <label>Title:
+      <input type="text" id="title" required>
+    </label>
+
+    <label>Author:
+      <input type="text" id="author" required>
+    </label>
+
+    <label>Description:
+      <textarea id="description" rows="3"></textarea>
+    </label>
+
+    <label>Total Pages:
+      <input type="number" id="page" min="1" required>
+    </label>
+
+    <label>Current Page:
+      <input type="number" id="currentPage" min="0">
+    </label>
+
+    <label>Readed:
+      <select id="readed">
+        <option value="false">No</option>
+        <option value="true">Yes</option>
+      </select>
+    </label>
+
+    <button id="btn" type="submit">Save Book</button>
+
+    <label>Change Page:
+      <input type="number" id="try" placeholder="Enter new page">
+    </label>
+    <button id="btn1">Change Page</button>
+  </form>
+
+  <div id="dv"></div>
+
+  <script>
+    class Book {
+      constructor(title, author, description, page, currentPage, read = false) {
+        this.title = title;
+        this.author = author;
+        this.description = description;
+        this.page = parseInt(page);
+        this.currentPage = parseInt(currentPage);
+        this.read = read;
+      }
+
+      readBook(page) {
+        if (page > this.page || page < 1) {
+          alert("Invalid page number!");
+        } else {
+          this.currentPage = page;
+          document.querySelector("#currentPage").value = page;
+          document.querySelector("#dv").innerHTML =
+            `<strong>Now reading page:</strong> ${this.currentPage}`;
+        }
+      }
+    }
+
+    let div = document.querySelector("#dv");
+    let btn = document.querySelector("#btn");
+    let btn1 = document.querySelector("#btn1");
+    let book;
+
+    btn.addEventListener("click", (e) => {
+      e.preventDefault();
+      book = new Book(
+        document.querySelector("#title").value,
+        document.querySelector("#author").value,
+        document.querySelector("#description").value,
+        document.querySelector("#page").value,
+        document.querySelector("#currentPage").value,
+        document.querySelector("#readed").value === "true"
+      );
+
+      div.innerHTML = `
+        <h3>Book Saved:</h3>
+        <p><strong>Title:</strong> ${book.title}</p>
+        <p><strong>Author:</strong> ${book.author}</p>
+        <p><strong>Description:</strong> ${book.description}</p>
+        <p><strong>Total Pages:</strong> ${book.page}</p>
+        <p><strong>Current Page:</strong> ${book.currentPage}</p>
+        <p><strong>Read:</strong> ${book.read ? "Yes" : "No"}</p>
+      `;
+    });
+
+    btn1.addEventListener("click", (e) => {
+      e.preventDefault();
+      if (book) {
+        let pageEx = parseInt(document.querySelector("#try").value);
+        book.readBook(pageEx);
+      } else {
+        alert("Please save a book first!");
+      }
+    });
+  </script>
+</body>
+
+</html>
